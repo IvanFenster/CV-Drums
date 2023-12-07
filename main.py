@@ -1,16 +1,26 @@
-# This is a sample Python script.
+import cv2
+import mediapipe as mp
+import numpy as np
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+#создаем детектор
+handsDetector = mp.solutions.hands.Hands()
+# загружаем изображение
+image = cv2.imread("Chord C.jpg")
+# Отражаем по горизонтали если надо
+# (Mediapipе распознает именно зеркальное селфи)
+flipped = np.fliplr(image)
+# переводим его в формат RGB для распознавания
+flippedRGB = cv2.cvtColor(flipped, cv2.COLOR_BGR2RGB)
+# Распознаем
+results = handsDetector.process(flippedRGB)
+# Рисуем распознанное, если распозналось
+if results.multi_hand_landmarks is not None:
+    mp.solutions.drawing_utils.draw_landmarks(flippedRGB, 
+       results.multi_hand_landmarks[0])
+# Отражаем обратно, переводим в BGR и показываем результат
+res_image = cv2.cvtColor(np.fliplr(flippedRGB), cv2.COLOR_RGB2BGR)
+print(results.multi_handedness)
+cv2.imshow("Hands", res_image)
+cv2.waitKey(0)
+# освобождаем ресурсы
+handsDetector.close()
