@@ -9,7 +9,7 @@ def compbine_img(img1, img2):
     rows, cols, channels = img2.shape
 
     # Ниже я изменил roi, чтобы картинка выводилась посередине, а не в левом верхнем углу
-    roi = img1[int(brows / 2) - int(rows / 2):int(brows / 2) + int(rows / 2), int(bcols / 2) - int(cols / 2):int(bcols / 2) + int(cols / 2)]
+    roi = img1[int(brows / 20 * 13) - int(rows / 2):int(brows / 20 * 13) + int(rows / 2), int(bcols / 2) - int(cols / 2):int(bcols / 2) + int(cols / 2)]
 
     img2gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
     ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
@@ -20,7 +20,7 @@ def compbine_img(img1, img2):
     img2_fg = cv2.bitwise_and(img2, img2, mask=mask)
 
     dst = cv2.add(img1_bg, img2_fg)
-    img1[int(brows / 2) - int(rows / 2):int(brows / 2) + int(rows / 2), int(bcols / 2) -
+    img1[int(brows / 20 * 13) - int(rows / 2):int(brows / 20 * 13) + int(rows / 2), int(bcols / 2) -
                                                                         int(cols / 2):int(bcols / 2) + int(
         cols / 2)] = dst
 
