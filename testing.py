@@ -4,7 +4,7 @@ import numpy as np
 
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
-cap = cv2.VideoCapture("Игра 2.mov")
+cap = cv2.VideoCapture()
 while(cap.isOpened()):
     ret, frame = cap.read()
     if cv2.waitKey(1) & 0xFF == ord('q') or not ret:
