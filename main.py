@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-
+import time
 
 # Stackoverflow: https://ru.stackoverflow.com/questions/950520/opencv-%D0%BD%D0%B0%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5-%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B9
 def compbine_img(img1, img2):
@@ -27,10 +27,17 @@ def compbine_img(img1, img2):
     return img1
 
 
+def tom_sound():
+    pass
+
+
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
 cap = cv2.VideoCapture(0)
 drum = cv2.imread("Барабан.png")
+tom_flag = False
+k = 1
+last = time.time()
 while(cap.isOpened()):
     ret, frame = cap.read()
     if cv2.waitKey(1) & 0xFF == ord('q') or not ret:
@@ -49,10 +56,31 @@ while(cap.isOpened()):
                                                   mp.solutions.drawing_styles.get_default_hand_landmarks_style(),
                                                   mp.solutions.drawing_styles.get_default_hand_connections_style())
 
+                x_pos = i.landmark[8].x
+                y_pos = i.landmark[8].y
+
+                if 0.3283 < x_pos < 0.4264 and 0.4205 < y_pos < 0.5496:
+                    now = time.time()
+                    if tom_flag == False:
+
+                        if now - last > 0.2:
+                            tom_flag = True
+                            tom_sound()
+                            last = time.time()
+                            print(k)
+                            k += 1
+                else:
+                    tom_flag = False
+
+
+
+
+
+
     # переводим в BGR и показываем результат
     res_image = cv2.cvtColor(flippedRGB, cv2.COLOR_RGB2BGR)
 
-    cv2.imshow("Hands", compbine_img(res_image, drum))
+    cv2.imshow("Drums", compbine_img(res_image, drum))
 
 # освобождаем ресурсы
 handsDetector.close()
