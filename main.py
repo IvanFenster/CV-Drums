@@ -7,9 +7,8 @@ import time
 def compbine_img(img1, img2):
     brows, bcols = img1.shape[:2]
     rows, cols, channels = img2.shape
-
     # Ниже я изменил roi, чтобы картинка выводилась посередине, а не в левом верхнем углу
-    roi = img1[int(brows / 20 * 13) - int(rows / 2):int(brows / 20 * 13) + int(rows / 2), int(bcols / 2) - int(cols / 2):int(bcols / 2) + int(cols / 2)]
+    roi = img1[int(brows / 2) - int(rows / 2):int(brows / 2) + int(rows / 2), int(bcols / 2) - int(cols / 2):int(bcols / 2) + int(cols / 2)]
 
     img2gray = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
     ret, mask = cv2.threshold(img2gray, 10, 255, cv2.THRESH_BINARY)
@@ -20,9 +19,10 @@ def compbine_img(img1, img2):
     img2_fg = cv2.bitwise_and(img2, img2, mask=mask)
 
     dst = cv2.add(img1_bg, img2_fg)
-    img1[int(brows / 20 * 13) - int(rows / 2):int(brows / 20 * 13) + int(rows / 2), int(bcols / 2) -
+    img1[int(brows / 2) - int(rows / 2):int(brows / 2) + int(rows / 2), int(bcols / 2) -
                                                                         int(cols / 2):int(bcols / 2) + int(
         cols / 2)] = dst
+    cv2.imwrite('res.jpg', img1)
 
     return img1
 
@@ -34,7 +34,11 @@ def tom_sound():
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
 cap = cv2.VideoCapture(0)
-drum = cv2.imread("Барабан.png")
+drum = cv2.imread("Background.png")
+
+x_pos = 0
+y_pos = 0
+
 tom_flag = False
 k = 1
 last = time.time()
@@ -56,13 +60,15 @@ while(cap.isOpened()):
                                                   mp.solutions.drawing_styles.get_default_hand_landmarks_style(),
                                                   mp.solutions.drawing_styles.get_default_hand_connections_style())
 
+                prev_x = x_pos
+                prev_y = y_pos
                 x_pos = i.landmark[8].x
                 y_pos = i.landmark[8].y
 
-                if 0.3283 < x_pos < 0.4264 and 0.4205 < y_pos < 0.5496:
-                    now = time.time()
-                    if tom_flag == False:
 
+                if 0.1559 < x_pos < 0.4291 and 0.648 < y_pos < 1:
+                    now = time.time()
+                    if tom_flag == False and y_pos > prev_y:
                         if now - last > 0.2:
                             tom_flag = True
                             tom_sound()
@@ -71,9 +77,6 @@ while(cap.isOpened()):
                             k += 1
                 else:
                     tom_flag = False
-
-
-
 
 
 
