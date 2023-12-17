@@ -35,13 +35,14 @@ def compbine_img(img1, img2):
 def tom_sound():
     tom.play()
 
-
 def bass_sound():
     bass.play()
 
-
 def ride_sound():
     ride.play()
+
+def crash_sound():
+    crash.play()
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -69,6 +70,9 @@ bass_flag_l = False
 
 ride_flag_r = False
 ride_flag_l = False
+
+crash_flag_r = False
+crash_flag_l = False
 
 k = 1
 last = time.time()
@@ -148,6 +152,19 @@ while(cap.isOpened()):
                     ride_flag_r = False
                     k += 1
 
+                # CRASH
+                if 0.0281 < x_pos_r < 0.2572 and 0.0703 < y_pos_r < 0.2842:
+                    now = time.time()
+
+                    if crash_flag_r == False:
+                        if now - last > TIME_LIMIT:
+                            crash_flag_r = True
+                            crash_sound()
+                            last = time.time()
+                else:
+                    crash_flag_r = False
+                    k += 1
+
 
             # Если левая
             elif now_hand_type == "Left":
@@ -196,17 +213,36 @@ while(cap.isOpened()):
                     ride_flag_l = False
                     k += 1
 
-            else:
-                tom_flag_r = False
-                tom_flag_l = False
-                bass_flag_r = False
-                bass_flag_l = False
+                # CRASH
+                if 0.0281 < x_pos_l < 0.2572 and 0.0703 < y_pos_l < 0.2842:
+                    now = time.time()
+
+                    if crash_flag_l == False:
+                        if now - last > TIME_LIMIT:
+                            crash_flag_l = True
+                            crash_sound()
+                            last = time.time()
+                else:
+                    crash_flag_l = False
+                    k += 1
+
+    else:
+        tom_flag_r = False
+        tom_flag_l = False
+        bass_flag_r = False
+        bass_flag_l = False
+        ride_flag_r = False
+        ride_flag_l = False
+        crash_flag_r = False
+        crash_flag_l = False
 
 
     # переводим в BGR и показываем результат
     res_image = cv2.cvtColor(flippedRGB, cv2.COLOR_RGB2BGR)
 
     cv2.imshow("Drums", compbine_img(res_image, drum))
+
+
 
 # освобождаем ресурсы
 handsDetector.close()
