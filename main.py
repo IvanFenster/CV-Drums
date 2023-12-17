@@ -27,7 +27,6 @@ def compbine_img(img1, img2):
     img1[int(brows / 2) - int(rows / 2):int(brows / 2) + int(rows / 2), int(bcols / 2) -
                                                                         int(cols / 2):int(bcols / 2) + int(
         cols / 2)] = dst
-    cv2.imwrite('res.jpg', img1)
 
     return img1
 
@@ -53,7 +52,7 @@ ride = pygame.mixer.Sound('audio/ride_sound.mp3')
 crash = pygame.mixer.Sound('audio/crash_sound.wav')
 
 #создаем детектор
-handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
+handsDetector = mp.solutions.hands.Hands(max_num_hands=2)
 cap = cv2.VideoCapture(1)
 drum = cv2.imread("image/Background2.png")
 
@@ -241,8 +240,6 @@ while(cap.isOpened()):
     res_image = cv2.cvtColor(flippedRGB, cv2.COLOR_RGB2BGR)
 
     cv2.imshow("Drums", compbine_img(res_image, drum))
-
-
 
 # освобождаем ресурсы
 handsDetector.close()
