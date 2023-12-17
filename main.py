@@ -40,16 +40,21 @@ def bass_sound():
     bass.play()
 
 
+def ride_sound():
+    ride.play()
+
 pygame.init()
 clock = pygame.time.Clock()
 
 tom = pygame.mixer.Sound('audio/tom_sound.mp3')
 bass = pygame.mixer.Sound('audio/bass_sound1.mp3')
+ride = pygame.mixer.Sound('audio/ride_sound.mp3')
+crash = pygame.mixer.Sound('audio/crash_sound.wav')
 
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
 cap = cv2.VideoCapture(1)
-drum = cv2.imread("image/Background.png")
+drum = cv2.imread("image/Background2.png")
 
 x_pos_l = 0
 y_pos_l = 0
@@ -61,6 +66,9 @@ tom_flag_l = False
 
 bass_flag_r = False
 bass_flag_l = False
+
+ride_flag_r = False
+ride_flag_l = False
 
 k = 1
 last = time.time()
@@ -127,6 +135,20 @@ while(cap.isOpened()):
                     bass_flag_r = False
                     k += 1
 
+                # RIDE
+                if 0.7322 < x_pos_r < 0.9593 and 0.0611 < y_pos_r < 0.267:
+                    now = time.time()
+
+                    if ride_flag_r == False:
+                        if now - last > TIME_LIMIT:
+                            ride_flag_r = True
+                            ride_sound()
+                            last = time.time()
+                else:
+                    ride_flag_r = False
+                    k += 1
+
+
             # Если левая
             elif now_hand_type == "Left":
 
@@ -159,6 +181,19 @@ while(cap.isOpened()):
                             last = time.time()
                 elif 0.525 < x_pos_l < 0.7953:
                     bass_flag_l = False
+                    k += 1
+
+                # RIDE
+                if 0.7322 < x_pos_l < 0.9593 and 0.0611 < y_pos_l < 0.267:
+                    now = time.time()
+
+                    if ride_flag_l == False:
+                        if now - last > TIME_LIMIT:
+                            ride_flag_l = True
+                            ride_sound()
+                            last = time.time()
+                else:
+                    ride_flag_l = False
                     k += 1
 
             else:
