@@ -1,10 +1,7 @@
-import sys
-
 import cv2
 import mediapipe as mp
 import numpy as np
 import time
-
 import pygame
 
 
@@ -54,7 +51,7 @@ crash = pygame.mixer.Sound('audio/crash_sound.wav')
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=2)
 cap = cv2.VideoCapture(1)
-drum = cv2.imread("image/Background2.png")
+drum = cv2.imread("image/background2.png")
 
 x_pos_l = 0
 y_pos_l = 0
