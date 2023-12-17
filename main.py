@@ -36,23 +36,39 @@ def tom_sound():
     tom.play()
 
 
+def bass_sound():
+    bass.play()
+
+
 pygame.init()
 clock = pygame.time.Clock()
 
-tom = pygame.mixer.Sound('audio/tom-37.mp3')
+tom = pygame.mixer.Sound('audio/tom_sound.mp3')
+bass = pygame.mixer.Sound('audio/bass_sound1.mp3')
 
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=6)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 drum = cv2.imread("image/Background.png")
 
-x_pos = 0
-y_pos = 0
+x_pos_l = 0
+y_pos_l = 0
+x_pos_r = 0
+y_pos_r = 0
 
-tom_flag = False
+tom_flag_r = False
+tom_flag_l = False
+
+bass_flag_r = False
+bass_flag_l = False
+
 k = 1
 last = time.time()
+
+TIME_LIMIT = 0.1
+
 while(cap.isOpened()):
+    handsType = []
     clock.tick(60)
     ret, frame = cap.read()
     if cv2.waitKey(1) & 0xFF == ord('q') or not ret:
@@ -65,33 +81,91 @@ while(cap.isOpened()):
     # Рисуем распознанное, если распозналось
 
     if results.multi_hand_landmarks is not None:
-        for i in results.multi_hand_landmarks:
-
+        # Определяем правая или левая рука
+        for i in results.multi_handedness:
+            handType = i.classification[0].label
+            handsType.append(handType)
+        for i in range(len(results.multi_hand_landmarks)):
+            hand = results.multi_hand_landmarks[i]
+            now_hand_type = handsType[i]
             mp.solutions.drawing_utils.draw_landmarks(flippedRGB,
-                                              i, mp.solutions.hands.HAND_CONNECTIONS,
+                                              hand, mp.solutions.hands.HAND_CONNECTIONS,
                                               mp.solutions.drawing_styles.get_default_hand_landmarks_style(),
                                               mp.solutions.drawing_styles.get_default_hand_connections_style())
 
-            prev_x = x_pos
-            prev_y = y_pos
-            x_pos = i.landmark[8].x
-            y_pos = i.landmark[8].y
+            # Если правая
+            if now_hand_type == "Right":
 
+                prev_x_r = x_pos_r
+                prev_y_r = y_pos_r
+                x_pos_r = hand.landmark[8].x
+                y_pos_r = hand.landmark[8].y
 
-            if 0.1559 < x_pos < 0.4291 and 0.648 < y_pos < 1:
-                now = time.time()
+                # TOM
+                if prev_y_r < 0.648 < y_pos_r and 0.1559 < x_pos_r < 0.4291:
+                    now = time.time()
 
-                if tom_flag == False and y_pos > prev_y:
-                    if now - last > 0.2:
-                        tom_flag = True
-                        tom_sound()
-                        last = time.time()
+                    if tom_flag_r == False and y_pos_r > prev_y_r:
+                        if now - last > TIME_LIMIT:
+                            tom_flag_r = True
+                            tom_sound()
+                            last = time.time()
+                elif 0.1559 < x_pos_r < 0.4291:
+                    tom_flag_r = False
+                    k += 1
+
+                # BASS
+                if prev_y_r < 0.648 < y_pos_r and 0.525 < x_pos_r < 0.7953:
+                    now = time.time()
+
+                    if bass_flag_r == False and y_pos_r > prev_y_r:
+                        if now - last > TIME_LIMIT:
+                            bass_flag_r = True
+                            bass_sound()
+                            last = time.time()
+                elif 0.525 < x_pos_r < 0.7953:
+                    bass_flag_r = False
+                    k += 1
+
+            # Если левая
+            elif now_hand_type == "Left":
+
+                prev_x_l = x_pos_l
+                prev_y_l = y_pos_l
+                x_pos_l = hand.landmark[8].x
+                y_pos_l = hand.landmark[8].y
+
+                # TOM
+                if prev_y_l < 0.648 < y_pos_l and 0.1559 < x_pos_l < 0.4291 :
+                    now = time.time()
+
+                    if tom_flag_l == False and y_pos_l > prev_y_l:
+                        if now - last > TIME_LIMIT:
+                            tom_flag_l = True
+                            tom_sound()
+                            last = time.time()
+                elif 0.1559 < x_pos_l < 0.4291:
+                    tom_flag_l = False
+                    k += 1
+
+                # BASS
+                if prev_y_l < 0.648 < y_pos_l and 0.525 < x_pos_l < 0.7953:
+                    now = time.time()
+
+                    if bass_flag_l == False and y_pos_l > prev_y_l:
+                        if now - last > TIME_LIMIT:
+                            bass_flag_l = True
+                            bass_sound()
+                            last = time.time()
+                elif 0.525 < x_pos_l < 0.7953:
+                    bass_flag_l = False
+                    k += 1
 
             else:
-                tom_flag = False
-
-                k += 1
-
+                tom_flag_r = False
+                tom_flag_l = False
+                bass_flag_r = False
+                bass_flag_l = False
 
 
     # переводим в BGR и показываем результат
