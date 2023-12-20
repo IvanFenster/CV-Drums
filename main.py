@@ -50,7 +50,7 @@ crash = pygame.mixer.Sound('audio/crash_sound.wav')
 
 #создаем детектор
 handsDetector = mp.solutions.hands.Hands(max_num_hands=2)
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 drum = cv2.imread("image/background2.png")
 
 x_pos_l = 0
