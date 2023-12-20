@@ -1,7 +1,4 @@
-mediapipe==0.10.8
-numpy==1.26.2
-opencv_contrib_python==4.8.1.78
-opencv_python==4.8.1.78
-Pillow==10.1.0
-Pillow==10.1.0
-pygame==2.5.2
+mediapipe
+numpy
+opencv_python
+pygame
