@@ -1,19 +1,37 @@
-Computer Vision Drums Project. 
+# CV-Drums
 
-You can play a simplified version of drums using only hand movements! 
-You have four drums at your disposal, which you can hit with the index fingers of your right and left hand. The bottom left drum is the Tom, the bottom right drum is the Bass drum, the left cymbal is the Crash, and the right cymbal is the Ride. 
+Computer Vision Drums lets you play a simplified **virtual drum kit** using only your webcam and hand movements.  
+Move your **index fingers** to strike four pads:
 
-IMPORTANT:
-- Do not hit the drums too fast or the camera will not catch the movement.
-- The drums are for one person only, do not allow any other hands in the frame.
+- **Tom** (bottom-left)  
+- **Bass** (bottom-right)  
+- **Crash** (left cymbal)  
+- **Ride** (right cymbal)  
 
-Instructions for starting the programme:
-1) Import all the libraries required for the programme, which are listed in the requirements.txt file using the pip install -r requirements.txt command
-2) Run the main.py file in the python programming environment.
+> If you don’t have real drums, CV-Drums gives you a fun way to feel like a musician!
 
-Don't forget to turn on the sound and play! 
+---
 
-Examples of use:
-Computer Vision Drums is a programme for entertainment. If you don't have real drums, our project gives you a chance to feel like a musician.
+## Features
+- Real-time drum pad detection via webcam
+- Four mapped drums (Tom, Bass, Crash, Ride)
+- Playable with **only your index fingers**
+- Instant audio playback from local samples
+- Cross-platform (tested on Python 3.9+)
 
-The status of the project is ready!
+---
+
+## Important notes
+- Do **not hit too fast** – very rapid strikes may be missed.  
+- One player only – avoid having other hands in the frame.  
+- Turn on your sound before starting.
+
+---
+
+## Installation
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/IvanFenster/CV-Drums.git
+cd CV-Drums
+pip install -r requirements.txt
